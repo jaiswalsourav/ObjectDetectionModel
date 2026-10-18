@@ -1,0 +1,4 @@
+# Install PyTorch with CUDA first (see README), then:
+ultralytics
+opencv-python
+pyyaml

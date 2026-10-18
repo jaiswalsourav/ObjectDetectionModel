@@ -1,0 +1,6 @@
+raw/
+dataset/
+runs/
+*.pt
+.venv/
+__pycache__/
