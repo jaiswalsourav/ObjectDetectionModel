@@ -10,9 +10,6 @@ weights/
 *.pt
 *.onnx
 
-# Test images
-bus.jpg
-
 # Python
 .venv/
 __pycache__/
