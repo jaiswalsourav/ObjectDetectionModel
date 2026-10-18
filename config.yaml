@@ -1,12 +1,15 @@
 # Edit this list to your own object classes (order matters: index = class id used in labels)
 classes:
-  - object_a
-  - object_b
+  - daisy
+  - dandelion
+  - rose
+  - sunflower
+  - tulip
 
 # Training settings tuned for a 2 GB GPU (MX450)
 model: yolo11n.pt      # nano pretrained weights; try yolo11s.pt if memory allows
-imgsz: 640             # lower to 480/416 if you hit CUDA out-of-memory
-batch: 4               # lower to 2 if out-of-memory
+imgsz: 320             # flower dataset images are 320x320
+batch: 16              # lower to 8 if you hit CUDA out-of-memory
 epochs: 100
 patience: 20           # early stop if no improvement for N epochs
 val_ratio: 0.2         # fraction of images held out for validation

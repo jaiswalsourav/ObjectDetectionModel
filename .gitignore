@@ -1,6 +1,19 @@
+# Data (large, re-downloadable)
 raw/
 dataset/
+download/
+*.zip
+
+# Training outputs and model weights
 runs/
+weights/
 *.pt
+*.onnx
+
+# Test images
+bus.jpg
+
+# Python
 .venv/
 __pycache__/
+*.pyc

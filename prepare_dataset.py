@@ -8,6 +8,7 @@ Output:
     dataset/images/{train,val}, dataset/labels/{train,val}, dataset/data.yaml
 """
 import random
+import re
 import shutil
 from pathlib import Path
 
@@ -17,6 +18,12 @@ ROOT = Path(__file__).parent
 RAW = ROOT / "raw"
 OUT = ROOT / "dataset"
 IMG_EXTS = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
+
+
+def source_photo(name):
+    """Original photo id: strips Roboflow's '.rf.<hash>' and '_aug_N' suffixes."""
+    name = name.split(".rf.")[0]
+    return re.split(r"_aug_\d+", name)[0]
 
 
 def main():
@@ -29,10 +36,18 @@ def main():
     if missing:
         print(f"Warning: {len(missing)} images have no label file (treated as background): {missing[:5]}...")
 
+    # Keep augmented copies of the same photo in one split, otherwise val scores are inflated
+    groups = {}
+    for img in images:
+        groups.setdefault(source_photo(img.name), []).append(img)
+    keys = sorted(groups)
     random.seed(42)
-    random.shuffle(images)
-    n_val = max(1, int(len(images) * cfg["val_ratio"]))
-    splits = {"val": images[:n_val], "train": images[n_val:]}
+    random.shuffle(keys)
+    n_val = max(1, int(len(keys) * cfg["val_ratio"]))
+    splits = {
+        "val": [img for k in keys[:n_val] for img in groups[k]],
+        "train": [img for k in keys[n_val:] for img in groups[k]],
+    }
 
     if OUT.exists():
         shutil.rmtree(OUT)
